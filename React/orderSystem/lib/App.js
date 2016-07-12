@@ -72,7 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _index2 = _interopRequireDefault(_index);
 
-	var _App = __webpack_require__(191);
+	var _App = __webpack_require__(228);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -21520,7 +21520,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _OrderReducer2 = _interopRequireDefault(_OrderReducer);
 
-	var _DishReducer = __webpack_require__(189);
+	var _DishReducer = __webpack_require__(226);
 
 	var _DishReducer2 = _interopRequireDefault(_DishReducer);
 
@@ -21550,6 +21550,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 	var _addOrder = __webpack_require__(188);
+
+	__webpack_require__(189);
 
 	var OrderList = function OrderList() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
@@ -21606,6 +21608,524 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
+	__webpack_require__(190);
+	module.exports = __webpack_require__(193).Object.assign;
+
+/***/ },
+/* 190 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.3.1 Object.assign(target, source)
+	var $export = __webpack_require__(191);
+
+	$export($export.S + $export.F, 'Object', {assign: __webpack_require__(209)});
+
+/***/ },
+/* 191 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(192)
+	  , core      = __webpack_require__(193)
+	  , hide      = __webpack_require__(194)
+	  , redefine  = __webpack_require__(204)
+	  , ctx       = __webpack_require__(207)
+	  , PROTOTYPE = 'prototype';
+
+	var $export = function(type, name, source){
+	  var IS_FORCED = type & $export.F
+	    , IS_GLOBAL = type & $export.G
+	    , IS_STATIC = type & $export.S
+	    , IS_PROTO  = type & $export.P
+	    , IS_BIND   = type & $export.B
+	    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] || (global[name] = {}) : (global[name] || {})[PROTOTYPE]
+	    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+	    , expProto  = exports[PROTOTYPE] || (exports[PROTOTYPE] = {})
+	    , key, own, out, exp;
+	  if(IS_GLOBAL)source = name;
+	  for(key in source){
+	    // contains in native
+	    own = !IS_FORCED && target && target[key] !== undefined;
+	    // export native or passed
+	    out = (own ? target : source)[key];
+	    // bind timers to global for call from export context
+	    exp = IS_BIND && own ? ctx(out, global) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+	    // extend global
+	    if(target)redefine(target, key, out, type & $export.U);
+	    // export
+	    if(exports[key] != out)hide(exports, key, exp);
+	    if(IS_PROTO && expProto[key] != out)expProto[key] = out;
+	  }
+	};
+	global.core = core;
+	// type bitmap
+	$export.F = 1;   // forced
+	$export.G = 2;   // global
+	$export.S = 4;   // static
+	$export.P = 8;   // proto
+	$export.B = 16;  // bind
+	$export.W = 32;  // wrap
+	$export.U = 64;  // safe
+	$export.R = 128; // real proto method for `library` 
+	module.exports = $export;
+
+/***/ },
+/* 192 */
+/***/ function(module, exports) {
+
+	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+	var global = module.exports = typeof window != 'undefined' && window.Math == Math
+	  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+	if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
+
+/***/ },
+/* 193 */
+/***/ function(module, exports) {
+
+	var core = module.exports = {version: '2.4.0'};
+	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
+
+/***/ },
+/* 194 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var dP         = __webpack_require__(195)
+	  , createDesc = __webpack_require__(203);
+	module.exports = __webpack_require__(199) ? function(object, key, value){
+	  return dP.f(object, key, createDesc(1, value));
+	} : function(object, key, value){
+	  object[key] = value;
+	  return object;
+	};
+
+/***/ },
+/* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var anObject       = __webpack_require__(196)
+	  , IE8_DOM_DEFINE = __webpack_require__(198)
+	  , toPrimitive    = __webpack_require__(202)
+	  , dP             = Object.defineProperty;
+
+	exports.f = __webpack_require__(199) ? Object.defineProperty : function defineProperty(O, P, Attributes){
+	  anObject(O);
+	  P = toPrimitive(P, true);
+	  anObject(Attributes);
+	  if(IE8_DOM_DEFINE)try {
+	    return dP(O, P, Attributes);
+	  } catch(e){ /* empty */ }
+	  if('get' in Attributes || 'set' in Attributes)throw TypeError('Accessors not supported!');
+	  if('value' in Attributes)O[P] = Attributes.value;
+	  return O;
+	};
+
+/***/ },
+/* 196 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(197);
+	module.exports = function(it){
+	  if(!isObject(it))throw TypeError(it + ' is not an object!');
+	  return it;
+	};
+
+/***/ },
+/* 197 */
+/***/ function(module, exports) {
+
+	module.exports = function(it){
+	  return typeof it === 'object' ? it !== null : typeof it === 'function';
+	};
+
+/***/ },
+/* 198 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = !__webpack_require__(199) && !__webpack_require__(200)(function(){
+	  return Object.defineProperty(__webpack_require__(201)('div'), 'a', {get: function(){ return 7; }}).a != 7;
+	});
+
+/***/ },
+/* 199 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// Thank's IE8 for his funny defineProperty
+	module.exports = !__webpack_require__(200)(function(){
+	  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+	});
+
+/***/ },
+/* 200 */
+/***/ function(module, exports) {
+
+	module.exports = function(exec){
+	  try {
+	    return !!exec();
+	  } catch(e){
+	    return true;
+	  }
+	};
+
+/***/ },
+/* 201 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(197)
+	  , document = __webpack_require__(192).document
+	  // in old IE typeof document.createElement is 'object'
+	  , is = isObject(document) && isObject(document.createElement);
+	module.exports = function(it){
+	  return is ? document.createElement(it) : {};
+	};
+
+/***/ },
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.1.1 ToPrimitive(input [, PreferredType])
+	var isObject = __webpack_require__(197);
+	// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+	// and the second argument - flag - preferred type is a string
+	module.exports = function(it, S){
+	  if(!isObject(it))return it;
+	  var fn, val;
+	  if(S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+	  if(typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))return val;
+	  if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+	  throw TypeError("Can't convert object to primitive value");
+	};
+
+/***/ },
+/* 203 */
+/***/ function(module, exports) {
+
+	module.exports = function(bitmap, value){
+	  return {
+	    enumerable  : !(bitmap & 1),
+	    configurable: !(bitmap & 2),
+	    writable    : !(bitmap & 4),
+	    value       : value
+	  };
+	};
+
+/***/ },
+/* 204 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(192)
+	  , hide      = __webpack_require__(194)
+	  , has       = __webpack_require__(205)
+	  , SRC       = __webpack_require__(206)('src')
+	  , TO_STRING = 'toString'
+	  , $toString = Function[TO_STRING]
+	  , TPL       = ('' + $toString).split(TO_STRING);
+
+	__webpack_require__(193).inspectSource = function(it){
+	  return $toString.call(it);
+	};
+
+	(module.exports = function(O, key, val, safe){
+	  var isFunction = typeof val == 'function';
+	  if(isFunction)has(val, 'name') || hide(val, 'name', key);
+	  if(O[key] === val)return;
+	  if(isFunction)has(val, SRC) || hide(val, SRC, O[key] ? '' + O[key] : TPL.join(String(key)));
+	  if(O === global){
+	    O[key] = val;
+	  } else {
+	    if(!safe){
+	      delete O[key];
+	      hide(O, key, val);
+	    } else {
+	      if(O[key])O[key] = val;
+	      else hide(O, key, val);
+	    }
+	  }
+	// add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
+	})(Function.prototype, TO_STRING, function toString(){
+	  return typeof this == 'function' && this[SRC] || $toString.call(this);
+	});
+
+/***/ },
+/* 205 */
+/***/ function(module, exports) {
+
+	var hasOwnProperty = {}.hasOwnProperty;
+	module.exports = function(it, key){
+	  return hasOwnProperty.call(it, key);
+	};
+
+/***/ },
+/* 206 */
+/***/ function(module, exports) {
+
+	var id = 0
+	  , px = Math.random();
+	module.exports = function(key){
+	  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+	};
+
+/***/ },
+/* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// optional / simple context binding
+	var aFunction = __webpack_require__(208);
+	module.exports = function(fn, that, length){
+	  aFunction(fn);
+	  if(that === undefined)return fn;
+	  switch(length){
+	    case 1: return function(a){
+	      return fn.call(that, a);
+	    };
+	    case 2: return function(a, b){
+	      return fn.call(that, a, b);
+	    };
+	    case 3: return function(a, b, c){
+	      return fn.call(that, a, b, c);
+	    };
+	  }
+	  return function(/* ...args */){
+	    return fn.apply(that, arguments);
+	  };
+	};
+
+/***/ },
+/* 208 */
+/***/ function(module, exports) {
+
+	module.exports = function(it){
+	  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
+	  return it;
+	};
+
+/***/ },
+/* 209 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	// 19.1.2.1 Object.assign(target, source, ...)
+	var getKeys  = __webpack_require__(210)
+	  , gOPS     = __webpack_require__(223)
+	  , pIE      = __webpack_require__(224)
+	  , toObject = __webpack_require__(225)
+	  , IObject  = __webpack_require__(213)
+	  , $assign  = Object.assign;
+
+	// should work with symbols and should have deterministic property order (V8 bug)
+	module.exports = !$assign || __webpack_require__(200)(function(){
+	  var A = {}
+	    , B = {}
+	    , S = Symbol()
+	    , K = 'abcdefghijklmnopqrst';
+	  A[S] = 7;
+	  K.split('').forEach(function(k){ B[k] = k; });
+	  return $assign({}, A)[S] != 7 || Object.keys($assign({}, B)).join('') != K;
+	}) ? function assign(target, source){ // eslint-disable-line no-unused-vars
+	  var T     = toObject(target)
+	    , aLen  = arguments.length
+	    , index = 1
+	    , getSymbols = gOPS.f
+	    , isEnum     = pIE.f;
+	  while(aLen > index){
+	    var S      = IObject(arguments[index++])
+	      , keys   = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S)
+	      , length = keys.length
+	      , j      = 0
+	      , key;
+	    while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
+	  } return T;
+	} : $assign;
+
+/***/ },
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+	var $keys       = __webpack_require__(211)
+	  , enumBugKeys = __webpack_require__(222);
+
+	module.exports = Object.keys || function keys(O){
+	  return $keys(O, enumBugKeys);
+	};
+
+/***/ },
+/* 211 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var has          = __webpack_require__(205)
+	  , toIObject    = __webpack_require__(212)
+	  , arrayIndexOf = __webpack_require__(216)(false)
+	  , IE_PROTO     = __webpack_require__(220)('IE_PROTO');
+
+	module.exports = function(object, names){
+	  var O      = toIObject(object)
+	    , i      = 0
+	    , result = []
+	    , key;
+	  for(key in O)if(key != IE_PROTO)has(O, key) && result.push(key);
+	  // Don't enum bug & hidden keys
+	  while(names.length > i)if(has(O, key = names[i++])){
+	    ~arrayIndexOf(result, key) || result.push(key);
+	  }
+	  return result;
+	};
+
+/***/ },
+/* 212 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// to indexed object, toObject with fallback for non-array-like ES3 strings
+	var IObject = __webpack_require__(213)
+	  , defined = __webpack_require__(215);
+	module.exports = function(it){
+	  return IObject(defined(it));
+	};
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// fallback for non-array-like ES3 and non-enumerable old V8 strings
+	var cof = __webpack_require__(214);
+	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
+	  return cof(it) == 'String' ? it.split('') : Object(it);
+	};
+
+/***/ },
+/* 214 */
+/***/ function(module, exports) {
+
+	var toString = {}.toString;
+
+	module.exports = function(it){
+	  return toString.call(it).slice(8, -1);
+	};
+
+/***/ },
+/* 215 */
+/***/ function(module, exports) {
+
+	// 7.2.1 RequireObjectCoercible(argument)
+	module.exports = function(it){
+	  if(it == undefined)throw TypeError("Can't call method on  " + it);
+	  return it;
+	};
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// false -> Array#indexOf
+	// true  -> Array#includes
+	var toIObject = __webpack_require__(212)
+	  , toLength  = __webpack_require__(217)
+	  , toIndex   = __webpack_require__(219);
+	module.exports = function(IS_INCLUDES){
+	  return function($this, el, fromIndex){
+	    var O      = toIObject($this)
+	      , length = toLength(O.length)
+	      , index  = toIndex(fromIndex, length)
+	      , value;
+	    // Array#includes uses SameValueZero equality algorithm
+	    if(IS_INCLUDES && el != el)while(length > index){
+	      value = O[index++];
+	      if(value != value)return true;
+	    // Array#toIndex ignores holes, Array#includes - not
+	    } else for(;length > index; index++)if(IS_INCLUDES || index in O){
+	      if(O[index] === el)return IS_INCLUDES || index || 0;
+	    } return !IS_INCLUDES && -1;
+	  };
+	};
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.1.15 ToLength
+	var toInteger = __webpack_require__(218)
+	  , min       = Math.min;
+	module.exports = function(it){
+	  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+	};
+
+/***/ },
+/* 218 */
+/***/ function(module, exports) {
+
+	// 7.1.4 ToInteger
+	var ceil  = Math.ceil
+	  , floor = Math.floor;
+	module.exports = function(it){
+	  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+	};
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toInteger = __webpack_require__(218)
+	  , max       = Math.max
+	  , min       = Math.min;
+	module.exports = function(index, length){
+	  index = toInteger(index);
+	  return index < 0 ? max(index + length, 0) : min(index, length);
+	};
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var shared = __webpack_require__(221)('keys')
+	  , uid    = __webpack_require__(206);
+	module.exports = function(key){
+	  return shared[key] || (shared[key] = uid(key));
+	};
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global = __webpack_require__(192)
+	  , SHARED = '__core-js_shared__'
+	  , store  = global[SHARED] || (global[SHARED] = {});
+	module.exports = function(key){
+	  return store[key] || (store[key] = {});
+	};
+
+/***/ },
+/* 222 */
+/***/ function(module, exports) {
+
+	// IE 8- don't enum bug keys
+	module.exports = (
+	  'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
+	).split(',');
+
+/***/ },
+/* 223 */
+/***/ function(module, exports) {
+
+	exports.f = Object.getOwnPropertySymbols;
+
+/***/ },
+/* 224 */
+/***/ function(module, exports) {
+
+	exports.f = {}.propertyIsEnumerable;
+
+/***/ },
+/* 225 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.1.13 ToObject(argument)
+	var defined = __webpack_require__(215);
+	module.exports = function(it){
+	  return Object(defined(it));
+	};
+
+/***/ },
+/* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
 	'use strict';
@@ -21614,7 +22134,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _DishInitialState = __webpack_require__(190);
+	var _DishInitialState = __webpack_require__(227);
 
 	var _DishInitialState2 = _interopRequireDefault(_DishInitialState);
 
@@ -21629,7 +22149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "DishReducer.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 190 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -21670,7 +22190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "DishInitialState.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 191 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -21685,11 +22205,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _DishList = __webpack_require__(192);
+	var _DishList = __webpack_require__(229);
 
 	var _DishList2 = _interopRequireDefault(_DishList);
 
-	var _CategoryBar = __webpack_require__(202);
+	var _CategoryBar = __webpack_require__(239);
 
 	var _CategoryBar2 = _interopRequireDefault(_CategoryBar);
 
@@ -21697,13 +22217,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactRedux = __webpack_require__(164);
 
-	var _Cart = __webpack_require__(206);
+	var _Cart = __webpack_require__(243);
 
 	var _Cart2 = _interopRequireDefault(_Cart);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(210);
+	__webpack_require__(247);
+	__webpack_require__(189);
 
 	var cat = ['lunch', 'tea', 'hot-drinks', '1', '2', '3', '4', '5', '6'];
 	var App = function App(props) {
@@ -21785,7 +22306,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "App.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 192 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -21800,13 +22321,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Dish = __webpack_require__(193);
+	var _Dish = __webpack_require__(230);
 
 	var _Dish2 = _interopRequireDefault(_Dish);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(200);
+	__webpack_require__(237);
 
 	var DishList = function DishList(props) {
 	  var dishList = props.dishList;
@@ -21858,7 +22379,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "DishList.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 193 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -21875,7 +22396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(194);
+	__webpack_require__(231);
 
 	var Dish = function Dish(props) {
 	  var price = props.price;
@@ -21958,16 +22479,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Dish.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 194 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(195);
+	var content = __webpack_require__(232);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(199)(content, {});
+	var update = __webpack_require__(236)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21984,21 +22505,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 195 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(196)();
+	exports = module.exports = __webpack_require__(233)();
 	// imports
 
 
 	// module
-	exports.push([module.id, ".dish {\n  display: flex;\n  padding: 0.4rem;\n  border: 1px solid #dedde4;\n  border-radius: 3px;\n  align-items: space-between;\n  margin: 0rem 0 0.5rem;\n  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);\n  background-color: white; }\n  .dish .dish-img {\n    margin: 0.2rem;\n    transition: transform 1s;\n    transform: rotate(360); }\n  .dish .dish-text-column {\n    flex-grow: 1;\n    padding: 0.5rem;\n    display: flex;\n    align-items: center;\n    flex-direction: column;\n    justify-content: space-between; }\n    .dish .dish-text-column .dish-price .price-text {\n      color: red; }\n  .dish .dish-text-row {\n    flex-grow: 1;\n    padding: 0.5rem;\n    display: flex;\n    align-items: center;\n    flex-direction: row;\n    justify-content: space-between; }\n    .dish .dish-text-row .dish-price .price-text {\n      color: red; }\n  .dish:hover {\n    box-shadow: 2px 2px 4px 4px #777572; }\n  .dish .dish-button {\n    display: flex; }\n    .dish .dish-button .dish-button-add {\n      background-image: url(" + __webpack_require__(197) + ");\n      background-size: 1.5rem;\n      width: 1.5rem;\n      height: 1.5rem;\n      transition: transform 0.2s; }\n      .dish .dish-button .dish-button-add:active {\n        background-size: 1.5rem;\n        width: 1.5rem;\n        height: 1.5rem;\n        transform: scale(1.3); }\n    .dish .dish-button .order-num {\n      align-self: center;\n      padding: 0 0.5rem; }\n    .dish .dish-button .dish-button-minus {\n      background-image: url(" + __webpack_require__(198) + ");\n      background-size: 1.5rem;\n      width: 1.5rem;\n      height: 1.5rem; }\n\n@media screen and (max-width: 700px) {\n  .category-current {\n    font-size: 1rem; }\n  .category {\n    font-size: 1rem; } }\n", ""]);
+	exports.push([module.id, ".dish {\n  display: flex;\n  padding: 0.4rem;\n  border: 1px solid #dedde4;\n  border-radius: 3px;\n  align-items: space-between;\n  margin: 0rem 0 0.5rem;\n  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);\n  background-color: white; }\n  .dish .dish-img {\n    margin: 0.2rem;\n    transition: transform 1s;\n    transform: rotate(360); }\n  .dish .dish-text-column {\n    flex-grow: 1;\n    padding: 0.5rem;\n    display: flex;\n    align-items: center;\n    flex-direction: column;\n    justify-content: space-between; }\n    .dish .dish-text-column .dish-price .price-text {\n      color: red; }\n  .dish .dish-text-row {\n    flex-grow: 1;\n    padding: 0.5rem;\n    display: flex;\n    align-items: center;\n    flex-direction: row;\n    justify-content: space-between; }\n    .dish .dish-text-row .dish-price .price-text {\n      color: red; }\n  .dish:hover {\n    box-shadow: 2px 2px 4px 4px #777572; }\n  .dish .dish-button {\n    display: flex; }\n    .dish .dish-button .dish-button-add {\n      background-image: url(" + __webpack_require__(234) + ");\n      background-size: 1.5rem;\n      width: 1.5rem;\n      height: 1.5rem;\n      transition: transform 0.2s; }\n      .dish .dish-button .dish-button-add:active {\n        background-size: 1.5rem;\n        width: 1.5rem;\n        height: 1.5rem;\n        transform: scale(1.3); }\n    .dish .dish-button .order-num {\n      align-self: center;\n      padding: 0 0.5rem; }\n    .dish .dish-button .dish-button-minus {\n      background-image: url(" + __webpack_require__(235) + ");\n      background-size: 1.5rem;\n      width: 1.5rem;\n      height: 1.5rem; }\n\n@media screen and (max-width: 700px) {\n  .category-current {\n    font-size: 1rem; }\n  .category {\n    font-size: 1rem; } }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 196 */
+/* 233 */
 /***/ function(module, exports) {
 
 	/*
@@ -22054,19 +22575,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 197 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "4bda435b3443c46b2597e6ab275d0d99.png";
 
 /***/ },
-/* 198 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "0ccadcfaaee9917baf6ac4b79c9835cd.png";
 
 /***/ },
-/* 199 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -22318,16 +22839,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 200 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(201);
+	var content = __webpack_require__(238);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(199)(content, {});
+	var update = __webpack_require__(236)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -22344,10 +22865,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 201 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(196)();
+	exports = module.exports = __webpack_require__(233)();
 	// imports
 
 
@@ -22358,7 +22879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 202 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -22373,13 +22894,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _CaterogyBlock = __webpack_require__(203);
+	var _CaterogyBlock = __webpack_require__(240);
 
 	var _CaterogyBlock2 = _interopRequireDefault(_CaterogyBlock);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(204);
+	__webpack_require__(241);
 
 	var CategoryBar = function CategoryBar(props) {
 	  var categoriesArr = props.categories;
@@ -22408,7 +22929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "CategoryBar.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 203 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -22449,16 +22970,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "CaterogyBlock.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 204 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(205);
+	var content = __webpack_require__(242);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(199)(content, {});
+	var update = __webpack_require__(236)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -22475,10 +22996,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 205 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(196)();
+	exports = module.exports = __webpack_require__(233)();
 	// imports
 
 
@@ -22489,7 +23010,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 206 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -22506,7 +23027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Dish = __webpack_require__(193);
+	var _Dish = __webpack_require__(230);
 
 	var _Dish2 = _interopRequireDefault(_Dish);
 
@@ -22518,7 +23039,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	__webpack_require__(207);
+	__webpack_require__(244);
 
 	var Cart = function (_React$Component) {
 	  _inherits(Cart, _React$Component);
@@ -22673,16 +23194,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/forclan/Documents/Javascript/React/order-system-yo/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Cart.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 207 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(208);
+	var content = __webpack_require__(245);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(199)(content, {});
+	var update = __webpack_require__(236)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -22699,36 +23220,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 208 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(196)();
+	exports = module.exports = __webpack_require__(233)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "footer {\n  background-color: #3fec84;\n  border-radius: 0.5rem;\n  position: fixed;\n  left: 0;\n  bottom: 0;\n  height: 5rem;\n  width: 100%; }\n\n.show {\n  display: block; }\n\n.hide {\n  display: none; }\n\n.cart-container {\n  display: flex;\n  justify-content: space-around;\n  position: relative; }\n  .cart-container .cart-dropdown {\n    z-index: 100;\n    position: fixed;\n    background-color: rgba(1, 7, 15, 0.5);\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 5rem;\n    overflow: scroll; }\n    .cart-container .cart-dropdown .dropdown-contents {\n      position: absolute;\n      left: 0;\n      right: 0;\n      bottom: 0;\n      z-index: 101;\n      padding: 0.4rem 0.4rem 0; }\n  .cart-container .cart-img {\n    margin: 1rem;\n    width: 3rem;\n    height: 3rem;\n    background-size: 3rem;\n    background-image: url(" + __webpack_require__(209) + ");\n    position: relative; }\n    .cart-container .cart-img .red-dot {\n      height: 1rem;\n      width: 1rem;\n      border-radius: 1rem;\n      display: inline-block;\n      text-align: center;\n      font-size: 0.8rem;\n      color: #fff;\n      background: red;\n      position: absolute;\n      top: -0.6rem;\n      right: -0.6rem; }\n  .cart-container .cart-total-price {\n    display: flex;\n    background-color: rgba(27, 252, 225, 0.76);\n    border-radius: 0.5rem;\n    flex: 1;\n    color: red;\n    padding-left: 1rem;\n    padding-right: 1rem;\n    font-size: 1.5rem;\n    align-items: center;\n    justify-content: center; }\n  .cart-container .cart-do-order {\n    border-radius: 0.5rem;\n    flex: 1;\n    background-color: #16e7bb;\n    display: flex;\n    align-items: center;\n    justify-content: center; }\n", ""]);
+	exports.push([module.id, "footer {\n  background-color: #3fec84;\n  border-radius: 0.5rem;\n  position: fixed;\n  left: 0;\n  bottom: 0;\n  height: 5rem;\n  width: 100%; }\n\n.show {\n  display: block; }\n\n.hide {\n  display: none; }\n\n.cart-container {\n  display: flex;\n  justify-content: space-around;\n  position: relative; }\n  .cart-container .cart-dropdown {\n    z-index: 100;\n    position: fixed;\n    background-color: rgba(1, 7, 15, 0.5);\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 5rem;\n    overflow: scroll; }\n    .cart-container .cart-dropdown .dropdown-contents {\n      position: absolute;\n      left: 0;\n      right: 0;\n      bottom: 0;\n      z-index: 101;\n      padding: 0.4rem 0.4rem 0; }\n  .cart-container .cart-img {\n    margin: 1rem;\n    width: 3rem;\n    height: 3rem;\n    background-size: 3rem;\n    background-image: url(" + __webpack_require__(246) + ");\n    position: relative; }\n    .cart-container .cart-img .red-dot {\n      height: 1rem;\n      width: 1rem;\n      border-radius: 1rem;\n      display: inline-block;\n      text-align: center;\n      font-size: 0.8rem;\n      color: #fff;\n      background: red;\n      position: absolute;\n      top: -0.6rem;\n      right: -0.6rem; }\n  .cart-container .cart-total-price {\n    display: flex;\n    background-color: rgba(27, 252, 225, 0.76);\n    border-radius: 0.5rem;\n    flex: 1;\n    color: red;\n    padding-left: 1rem;\n    padding-right: 1rem;\n    font-size: 1.5rem;\n    align-items: center;\n    justify-content: center; }\n  .cart-container .cart-do-order {\n    border-radius: 0.5rem;\n    flex: 1;\n    background-color: #16e7bb;\n    display: flex;\n    align-items: center;\n    justify-content: center; }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 209 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "fcf364426d8a1356eacb0a153e9647ad.png";
 
 /***/ },
-/* 210 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(211);
+	var content = __webpack_require__(248);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(199)(content, {});
+	var update = __webpack_require__(236)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -22745,12 +23266,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 211 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(196)();
+	exports = module.exports = __webpack_require__(233)();
 	// imports
-	exports.i(__webpack_require__(212), "");
+	exports.i(__webpack_require__(249), "");
 
 	// module
 	exports.push([module.id, "::-webkit-scrollbar {\n  display: none; }\n\nbody {\n  background-color: rgba(146, 240, 203, 0.88); }\n\n.order-view-container {\n  display: flex;\n  padding-bottom: 5.5rem;\n  bottom: 100px; }\n\n.body {\n  margin: 0; }\n\n@media (max-width: 700px) {\n  .order-view-container {\n    flex-direction: row; }\n    .order-view-container .category-container {\n      flex-grow: 0;\n      padding-bottom: 100px; }\n    .order-view-container .dish-list {\n      padding-left: 4.5rem; } }\n\n@media (min-width: 700px) {\n  .order-view-container {\n    flex-direction: column; } }\n", ""]);
@@ -22759,10 +23280,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 212 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(196)();
+	exports = module.exports = __webpack_require__(233)();
 	// imports
 
 
