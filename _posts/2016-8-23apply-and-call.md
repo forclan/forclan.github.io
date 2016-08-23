@@ -1,3 +1,8 @@
+---
+layout: post
+title: 调用apply与call参数的区别
+---
+
 # 调用apply与call参数的区别
 ---
 问题的原因是需要求一个数组的最大值。之前看过类似的解决办法，知道是调用apply/call将数组的输入进行“切片”，然后传入Math.max。
