@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="keywords" content="滴滴出行平台,滴滴出行,打车平台,滴滴,打车,滴滴企业版,小橘科技">
+  <title>滴滴车主权益-滴滴驿站</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <style type="text/css">
+    body {
+      background-color: #000;
+    }
+
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      width: 750px;
+      /*height:1206px;*/
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      transform-origin: left top;
+      transform: scale(.5, .5);
+      -webkit-transform: scale(.5, .5);
+      -webkit-transform-origin: left top;
+      opacity: 0;
+      transition: opacity 1s;
+      -webkit-transition: opacity 1s;
+    }
+
+    .container img.icon_new {
+      position: absolute;
+      top: 855px;
+      left: 613px;
+      width: 55px;
+      height: 58px;
+    }
+
+    .container img {
+      width: 100%;
+      display: block;
+      /*height:100%;*/
+    }
+
+    .buttons {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+  </style>
+  <script>
+    $isShowed = 'gaoOilLineIsShowed';
+    $CONFIG = {
+      "uName": "lawrence",
+      "city": "昌平",
+      "phone": "13843843838",
+      "carNumber": "京B XX00",
+      "source": "来源"
+
+    }
+  </script>
+  <script>
+    // 上报配置
+    window.Omega = {
+      pageName: "eventHome",
+      productName: 'am_mt',
+      realname_org: $CONFIG.uName || '',
+      phone: $CONFIG.phone || '',
+      city_name: $CONFIG.city || '',
+      car_code_org: $CONFIG.carNumber || '',
+      source: $CONFIG.source,
+      autoClick: false,
+      autoTouch: false,
+      autoError: true,
+      debugMode: false,
+      autoSendPageView: true
+    }
+    var search = location.search.match(/[&?]{1}ref=([^&]+)/);
+    if (search && search.length) {
+      Omega.ref = search.pop()
+    }
+
+    function driveto(toLat, toLng) {
+      if (window.didi && window.didi.dbridge) {
+        window.didi.dbridge.launchNav({
+          toLat: toLat,
+          toLng: toLng
+        });
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <a href="./shenZhen-didiServiceDetail.html">
+      <img src="./img/shenZhen-didiService-entry.jpg" />
+    </a>
+    <a href="./shenZhen-oilEventDetail.html">
+      <img src="./img/shenZhen-didiMaintaince-entry.jpg" />
+    </a>
+    <a href="./shenZhen-activityWipe.html">
+      <img src="./img/shenZhen-didiWiper-entry.jpg" />
+    </a>
+    <img src="./img/shenZhen-buttons.jpg" usemap="#buttons" />
+    <map name="#buttons" id="buttons">
+        <area shape="rect" coords="0, 0, 375, 246"
+          href="javascript:driveto(22.5814700000,113.9052500000)"
+        />
+        <area shape="react" coords="375, 0, 750, 246"
+          href="tel:0755-29631338"
+        />
+      </map>
+    <!-- <area track-value='{"e":"am-b-am-eventHome-maintainEvent"}' shape="rect" coords="70,850,360,945" href="http://sunstreaker.xiaojukeji.com/ratchet/driver0421/maintain" alt=""  /> -->
+    <!-- <area track-value='{"e":"am-b-am-eventHome-gasOilLine"}' shape="rect" coords="380,850,670,945" href="http://am.didistatic.com/static/am/tech-bs/event/maintenance/gasOilLine-BeiJing.html" onclick="localStorage.setItem('gaoOilLineIsShowed', true)" /> -->
+    <!-- <area track-value='{"e":"am-b-am-eventHome-launchNav"}' shape="rect" coords="70,965,670,1055" href="javascript:driveto(40.021420,116.453340)" alt="" /> -->
+    <!-- <a class="tel" href="tel:4006868118" track-value='{"e":"am-b-am-eventHome-dial"}'   >4006868118</a> -->
+  </div>
+  <script src="http://am.didistatic.com/static/am/tech-bs/event/maintenance/js/zepto.js"></script>
+  <script src="http://am.didistatic.com/static/am/tech-bs/event/maintenance/js/didi.base.js"></script>
+  <script src="http://am.didistatic.com/static/am/tech-bs/event/maintenance/js/didi.dbridge.js"></script>
+  <script src="http://webapp.didistatic.com/static/webapp/shield/z/omega/omega/0.1.3/omega.min.js"></script>
+  <script>
+    setTimeout(function() {
+      var scalex = document.documentElement.clientWidth / 750;
+      var scaleY = document.documentElement.clientHeight / 1206;
+      var css = [];
+      css.push("opacity:1");
+      css.push("transform:scale(" + scalex + "," + Math.max(scalex, scaleY) + ")");
+      css.push("-webkit-transform:scale(" + scalex + "," + Math.max(scalex, scaleY) + ")");
+      document.querySelector('.container').setAttribute("style", css.join(';'));
+    });
+    Omega.enableClickFilterTracker({
+      attr: 'track-value'
+    })
+  </script>
+
+</body>
+<html>

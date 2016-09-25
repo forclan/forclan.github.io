@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="keywords" content="滴滴出行平台,滴滴出行,打车平台,滴滴,打车,滴滴企业版,小橘科技">
+  <title>滴滴驿站-雨刮</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <style media="all" type="text/css">
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .container img {
+      width: 100%;
+      float: left;
+    }
+  </style>
+  <script>
+    $CONFIG = {
+      "uName": "",
+      "city": "重庆市",
+      "phone": "",
+      "carNumber": "",
+      "source": "",
+      "surl": "http:\/\/sunstreaker.xiaojukeji.com\/ratchet\/driver0511\/cq_paint",
+      "stitle": ""
+    }
+  </script>
+  <script>
+    // 上报配置
+    window.Omega = {
+      pageName: 'wipeEventDetail',
+      productName: 'am_mt',
+      realname_org: $CONFIG.uName || '',
+      phone: $CONFIG.phone || '',
+      city_name: $CONFIG.city || '',
+      car_code_org: $CONFIG.carNumber || '',
+      source: $CONFIG.source,
+      autoClick: false,
+      autoTouch: false,
+      autoError: true,
+      debugMode: false,
+      autoSendPageView: true
+    }
+    var search = location.search.match(/[&?]{1}ref=([^&]+)/);
+    if (search && search.length) {
+      Omega.ref = search.pop()
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <img src="./img/shenZhen-wipeDetail_01.jpg" alt="" />
+    <img src="./img/shenZhen-wipeDetail_02.jpg" alt="" />
+    <img src="./img/shenZhen-wipeDetail_03.jpg" alt="" />
+    <img src="./img/shenZhen-wipeDetail_04.jpg" alt="" />
+  </div>
+</body>
+
+</html>
